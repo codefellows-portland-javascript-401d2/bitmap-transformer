@@ -1,4 +1,5 @@
-# Bitmap Transformer
+![cf](http://i.imgur.com/7v5ASc8.png) Bitmap Transformer
+====
 
 __Team Name__: Don Jon
 
