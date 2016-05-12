@@ -1,7 +1,22 @@
 var assert = require('assert');
+var index = require('../index');
+var transform = require('../transformer');
 
-describe('bitmap-transformer', () => {
-  it('reads a file and returns a buffer')
+describe('bitmap-reader', () => {
+  it('reads a file and returns a buffer', ()=>{
+    assert.ok(index('palette-bitmap.bmp'));
+  });
+
+  it('extract header info and output to JS object', () =>{
+
+  });
+
+});
+
+describe('transformer', () =>{
+  it('outputs a transformed buffer', () =>{
+    assert.ok(transform('someString'));
+  });
 
 });
 //module reads a file from disk
