@@ -1,13 +1,29 @@
 const fs = require('fs');
 const assert = require('assert');
 
-var image = {};
+var imageData = {
+  head: [],
+  body: []
+};
 
 it('targets image file and logs raw buffer', () => {
-  fs.readFile('images/palette-bitmap.bmp', (err, buf) => {
-    if (err) throw err;
-     
-    console.log(buf);
-    assert(buf);
+
+  getBytes('palette-bitmap.bmp', function(result) {
+    console.log(result);
+    assert(result);
   });
+    
+
 });
+
+function getBytes(file, callback) {
+  fs.readFile('./images/' + file, (err, buf) => {
+    if (err) throw err;
+    
+    const offset = buf.readInt16LE(10);
+    const headData = Buffer.from(buf.buffer, 0, offset).toString('binary');
+    const bodyData = Buffer.from(buf.buffer, offset);
+    
+    callback(headData);
+  });
+}
