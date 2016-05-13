@@ -1,4 +1,4 @@
-var transformColorVal = function(color){
+var transformToGrayScale = function(color){
   var grayVal = (color.r + color.g + color.b + color.a)/4;
 
   color.r = grayVal;
@@ -9,4 +9,4 @@ var transformColorVal = function(color){
   return color;
 };
 
-module.exports = transformColorVal;
+module.exports = transformToGrayScale;

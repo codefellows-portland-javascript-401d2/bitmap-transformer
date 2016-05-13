@@ -49,9 +49,6 @@ function bitmapBuffer(fileName){
     bufferHeader.colorPalette['color'+i] = transform(bufferHeader.colorPalette['color'+i]);
   }
 
-  
-
-  console.log(bufferHeader.colorPalette);
 
 // interate over each color in pallete,
 // ... for each color
@@ -77,17 +74,7 @@ function bitmapBuffer(fileName){
   });
 
 
-  //return rawBuffer;
+  return rawBuffer;
 }
 
 module.exports = bitmapBuffer;
-
-
-
-//header info
-  //bitmap header offset 0; length 14
-  //DIB header offset 14; length unknown but speced in byte index 14-17
-  //optional RGB bit masks
-      //to determine if RGB masks are present; determine DIB header length, ID bitmap format
-
-//which means color table offset = 14 + DIB.length + RGB bit masks (??)
