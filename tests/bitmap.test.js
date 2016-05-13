@@ -24,25 +24,23 @@ function getBytes(file, callback) {
     const paletteStart = 54;
     const headEnd = buf.readInt16LE(10);
     const headBuffer = Buffer.from(buf.buffer, 0, paletteStart);
-    const paletteBuffer = Buffer.from(buf.buffer, paletteStart, headEnd);
+    const paletteBuffer = Buffer.from(buf.buffer, 54, 1078);
     const bodyBuffer = Buffer.from(buf.buffer, headEnd);
     const paletteDecimals = [];
-    
+
     paletteBuffer.forEach(decimal => {
       paletteDecimals.push(decimal);
     });
-    
-    const newPalette = invertify(paletteDecimals);
-    
-    var newPaletteBuffer = new Buffer(newPalette);
-    
-    var newHeadBuffer = newPaletteBuffer.copy(headBuffer);
-    
-    callback(newHeadBuffer);
-    
-    
 
-    fs.writeFile('./images/palette-bitmap-copy.bmp', buf, (err) => {
+    const newPalette = invertify(paletteDecimals);
+
+    var newPaletteBuffer = new Buffer(newPalette);
+
+    const test = Buffer.concat([headBuffer, newPaletteBuffer, bodyBuffer]);
+
+    callback(newPaletteBuffer);
+
+    fs.writeFile('./images/palette-bitmap-copy.bmp', test, (err) => {
       if (err) throw err;
       console.log('It\'s saved!');
     });
@@ -57,4 +55,3 @@ function invertify(inputDecimals) {
   });
   return invertedDecimals;
 }
-
