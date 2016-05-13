@@ -49,6 +49,8 @@ function bitmapBuffer(fileName){
     bufferHeader.colorPalette['color'+i] = transform(bufferHeader.colorPalette['color'+i]);
   }
 
+  
+
   console.log(bufferHeader.colorPalette);
   //return rawBuffer;
 }
