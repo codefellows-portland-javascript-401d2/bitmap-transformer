@@ -24,7 +24,7 @@ function getBytes(file, callback) {
     const paletteStart = 54;
     const headEnd = buf.readInt16LE(10);
     const headBuffer = Buffer.from(buf.buffer, 0, paletteStart);
-    const paletteBuffer = Buffer.from(buf.buffer, 54, 1078);
+    const paletteBuffer = Buffer.from(buf.buffer, paletteStart, headEnd - paletteStart);
     const bodyBuffer = Buffer.from(buf.buffer, headEnd);
     const paletteDecimals = [];
 
@@ -36,7 +36,7 @@ function getBytes(file, callback) {
 
     var newPaletteBuffer = new Buffer(newPalette);
 
-    const test = Buffer.concat([headBuffer, newPaletteBuffer, bodyBuffer]);
+    const test = Buffer.concat([headBuffer, newPaletteBuffer, bodyBuffer], 11132);
 
     callback(newPaletteBuffer);
 
