@@ -8,7 +8,7 @@ describe('bitmap-reader', () => {
   });
 
   it('extract header info and output to JS object', () =>{
-
+    
   });
 
 });
