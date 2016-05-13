@@ -20,7 +20,7 @@ function BufferHeader(myBuffer){
   this.numberOfColorsInPalette = myBuffer.readInt32LE(46); // 256, but only uses 126
   this.imageSize = myBuffer.readInt16LE(34); //
 
-  // color information, size is ?, starts at 54
+  // color information, size is 1024 bytes, starts at 54
   const colorStartingOffset = 54;
   var thisColorLocation = colorStartingOffset;
 
@@ -29,10 +29,10 @@ function BufferHeader(myBuffer){
   for (let i=0; i<256; i++){
     let colorName = 'color' + i;
     this.colorPalette[colorName] = {
-      r: myBuffer.readUInt8(thisColorLocation),
-      g: myBuffer.readUInt8(thisColorLocation + 1),
-      b: myBuffer.readUInt8(thisColorLocation + 2),
-      a: myBuffer.readUInt8(thisColorLocation + 3)
+      a: myBuffer.readUInt8(thisColorLocation),
+      b: myBuffer.readUInt8(thisColorLocation + 1),
+      g: myBuffer.readUInt8(thisColorLocation + 2),
+      r: myBuffer.readUInt8(thisColorLocation + 3)
     };
     ++thisColorLocation;
 
@@ -50,6 +50,31 @@ function bitmapBuffer(fileName){
   }
 
   console.log(bufferHeader.colorPalette);
+
+// interate over each color in pallete,
+// ... for each color
+// write to each byte in the buffer color palette
+// using offset and run buf.writeUINT8()
+// offset starts at palette location, add for each write or 4 for each color
+  var itemOffset = 54;
+  for (var j = 0; j<=255; j++){
+    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].r, itemOffset);
+    itemOffset++;
+    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].g, itemOffset);
+    itemOffset++;
+    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].b, itemOffset);
+    itemOffset++;
+    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].a, itemOffset);
+    itemOffset++;
+  }
+
+  // write new file with buffer
+  const newFilePath = path.join(__dirname, 'palette-bitmap-grey.bmp');
+  fs.writeFile(newFilePath, rawBuffer, err => {
+    console.log(err);
+  });
+
+
   //return rawBuffer;
 }
 

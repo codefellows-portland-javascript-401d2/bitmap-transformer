@@ -1,9 +1,10 @@
 var transformColorVal = function(color){
-  var grayVal = Math.floor((color.r + color.g + color.b)/3);
+  var grayVal = (color.r + color.g + color.b + color.a)/4;
 
   color.r = grayVal;
   color.g = grayVal;
   color.b = grayVal;
+  color.a = grayVal;
 
   return color;
 };
