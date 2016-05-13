@@ -7,10 +7,6 @@ describe('bitmap-reader', () => {
     assert.ok(index('palette-bitmap.bmp'));
   });
 
-  it('extract header info and output to JS object', () =>{
-
-  });
-
 });
 
 describe('transformer', () =>{

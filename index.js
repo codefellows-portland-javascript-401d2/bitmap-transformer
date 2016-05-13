@@ -73,7 +73,7 @@ function bitmapBuffer(fileName){
     console.log(err);
   });
 
-
+  //returns buffer with new grayscale palette
   return rawBuffer;
 }
 
