@@ -9,7 +9,7 @@ describe('bitmap-reader', () => {
 
 });
 
-describe('transformer', () =>{
+describe.skip('transformer', () =>{
   it('transforms rgb color properties to expected grayscale', () =>{
     var colorTest = {
       r: 0,

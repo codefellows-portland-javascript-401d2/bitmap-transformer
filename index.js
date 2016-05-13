@@ -21,21 +21,19 @@ function BufferHeader(myBuffer){
   this.imageSize = myBuffer.readInt16LE(34); //
 
   // color information, size is 1024 bytes, starts at 54
-  const colorStartingOffset = 54;
-  var thisColorLocation = colorStartingOffset;
+  // const colorStartingOffset = 54;
 
   this.colorPalette = {};
 
-  for (let i=0; i<256; i++){
-    let colorName = 'color' + i;
+  for (var i=0, colorName = ''; i<256; i++){
+    54 + (i * 4);
+    colorName = 'color' + i;
     this.colorPalette[colorName] = {
-      a: myBuffer.readUInt8(thisColorLocation),
-      b: myBuffer.readUInt8(thisColorLocation + 1),
-      g: myBuffer.readUInt8(thisColorLocation + 2),
-      r: myBuffer.readUInt8(thisColorLocation + 3)
+      r: myBuffer.readUInt8(54 + (i * 4)),
+      g: myBuffer.readUInt8(54 + (i * 4) + 1),
+      b: myBuffer.readUInt8(54 + (i * 4) + 2),
+      a: myBuffer.readUInt8(54 + (i * 4) + 3)
     };
-    ++thisColorLocation;
-
   }
 }
 
@@ -45,7 +43,7 @@ function bitmapBuffer(fileName){
   var bufferHeader = new BufferHeader(rawBuffer);
 
 
-  for(var i = 0; i <= 255; i++){
+  for(var i = 0; i < 256; i++){
     bufferHeader.colorPalette['color'+i] = transform(bufferHeader.colorPalette['color'+i]);
   }
 
@@ -55,16 +53,12 @@ function bitmapBuffer(fileName){
 // write to each byte in the buffer color palette
 // using offset and run buf.writeUINT8()
 // offset starts at palette location, add for each write or 4 for each color
-  var itemOffset = 54;
-  for (var j = 0; j<=255; j++){
-    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].r, itemOffset);
-    itemOffset++;
-    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].g, itemOffset);
-    itemOffset++;
-    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].b, itemOffset);
-    itemOffset++;
-    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].a, itemOffset);
-    itemOffset++;
+  for (var j = 0; j<256; j++){
+    54 + (j * 4);
+    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].r, 54 + (j * 4));
+    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].g, 54 + (j * 4) + 1);
+    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].b, 54 + (j * 4) + 2);
+    rawBuffer.writeUInt8(bufferHeader.colorPalette['color'+j].a, 54 + (j * 4) + 3);
   }
 
   // write new file with buffer
