@@ -8,16 +8,28 @@ describe('bitmap-reader', () => {
   });
 
   it('extract header info and output to JS object', () =>{
-    
+
   });
 
 });
 
 describe('transformer', () =>{
-  it('outputs a transformed buffer', () =>{
-    assert.ok(transform('someString'));
-  });
+  it('transforms rgb color properties to expected grayscale', () =>{
+    var colorTest = {
+      r: 0,
+      g: 52,
+      b: 32
+    };
 
+    var expectedColor = {
+      r: 28,
+      g: 28,
+      b: 28
+    };
+
+    assert.deepEqual(transform(colorTest), expectedColor);
+
+  });
 });
 //module reads a file from disk
     //read file into buffer

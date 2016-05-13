@@ -1,7 +1,11 @@
-var transform = function(buff){
-  var transformBuffer = buff;
+var transformColorVal = function(color){
+  var grayVal = Math.floor((color.r + color.g + color.b)/3);
 
-  return transformBuffer;
+  color.r = grayVal;
+  color.g = grayVal;
+  color.b = grayVal;
+
+  return color;
 };
 
-module.exports = transform;
+module.exports = transformColorVal;

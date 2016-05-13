@@ -1,6 +1,7 @@
 //var transform = require('./transformer');
 var path = require('path');
 var fs = require('fs');
+var transform = require('./transformer');
 
 function BufferHeader(myBuffer){
   // header - size is 14, starts at 0
@@ -23,15 +24,18 @@ function BufferHeader(myBuffer){
   const colorStartingOffset = 54;
   var thisColorLocation = colorStartingOffset;
 
+  this.colorPalette = {};
+
   for (let i=0; i<256; i++){
     let colorName = 'color' + i;
-    this[colorName] = {
+    this.colorPalette[colorName] = {
       r: myBuffer.readUInt8(thisColorLocation),
       g: myBuffer.readUInt8(thisColorLocation + 1),
       b: myBuffer.readUInt8(thisColorLocation + 2),
       a: myBuffer.readUInt8(thisColorLocation + 3)
     };
     ++thisColorLocation;
+
   }
 }
 
@@ -39,7 +43,14 @@ function bitmapBuffer(fileName){
   const filePath = path.join(__dirname, fileName);
   var rawBuffer = fs.readFileSync(filePath);
   var bufferHeader = new BufferHeader(rawBuffer);
-  return rawBuffer;
+
+
+  for(var i = 0; i <= 255; i++){
+    bufferHeader.colorPalette['color'+i] = transform(bufferHeader.colorPalette['color'+i]);
+  }
+
+  console.log(bufferHeader.colorPalette);
+  //return rawBuffer;
 }
 
 module.exports = bitmapBuffer;
@@ -53,5 +64,3 @@ module.exports = bitmapBuffer;
       //to determine if RGB masks are present; determine DIB header length, ID bitmap format
 
 //which means color table offset = 14 + DIB.length + RGB bit masks (??)
-
-//how long is the fucking color table
