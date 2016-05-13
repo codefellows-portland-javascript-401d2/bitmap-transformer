@@ -2,10 +2,44 @@
 var path = require('path');
 var fs = require('fs');
 
+function BufferHeader(myBuffer){
+  // header - size is 14, starts at 0
+  this.headerBuffer1 = myBuffer.readInt8(0);
+  this.headerBuffer2 = myBuffer.readInt8(1);
+  this.headerText = String.fromCharCode(this.headerBuffer1, this.headerBuffer2);
+
+  this.sizeNumber = myBuffer.readInt32LE(2);
+  this.imageDataOffset = myBuffer.readInt32LE(10);  // 1078
+
+  // Windows bitmapinfoheader - size is 40, starts at 14
+  this.sizeOfBitMapCoreHeader = myBuffer.readInt32LE(14);  // 40
+  this.widthInPixels = myBuffer.readInt32LE(18);  // 100
+  this.heightInPixels = myBuffer.readInt32LE(22);  // 100
+  this.numberOfColorPlanes = myBuffer.readInt16LE(26);  // 1
+  this.numberOfColorsInPalette = myBuffer.readInt32LE(46); // 256, but only uses 126
+  this.imageSize = myBuffer.readInt16LE(34); //
+
+  // color information, size is ?, starts at 54
+  const colorStartingOffset = 54;
+  var thisColorLocation = colorStartingOffset;
+
+  for (let i=0; i<256; i++){
+    let colorName = 'color' + i;
+    this[colorName] = {
+      r: myBuffer.readUInt8(thisColorLocation),
+      g: myBuffer.readUInt8(thisColorLocation + 1),
+      b: myBuffer.readUInt8(thisColorLocation + 2),
+      a: myBuffer.readUInt8(thisColorLocation + 3)
+    };
+    ++thisColorLocation;
+  }
+}
+
 function bitmapBuffer(fileName){
-  this.filePath = path.join(__dirname, fileName);
-  this.rawBuffer = fs.readFileSync(this.filePath);
-  this.header = this.rawBuffer.readInt16LE(0);
+  const filePath = path.join(__dirname, fileName);
+  var rawBuffer = fs.readFileSync(filePath);
+  var bufferHeader = new BufferHeader(rawBuffer);
+  return rawBuffer;
 }
 
 module.exports = bitmapBuffer;
