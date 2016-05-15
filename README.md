@@ -4,7 +4,7 @@ __Team Name__: Don Jon
 
 __Team Members__: [Don Chatelain](https://github.com/DonChatelain), [Johnny Luangphasy](https://github.com/jluangphasy)
 
-A Bitmap reader and transformer that will read a Bitmap in from disk, run one or more color transforms on the bitmap and then it writes out to a new file.
+A Bitmap reader and transformer that will read a Bitmap image file from disk, run a color transformation on the bitmap, and then write out to a new file.
 
 ## Getting Started
 
