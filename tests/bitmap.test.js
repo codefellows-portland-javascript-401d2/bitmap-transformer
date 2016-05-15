@@ -30,5 +30,29 @@ describe('Bitmap Transformer', () => {
     done();
   });
   
+  it('assures that transformed buffer length is same as original', (done) => {
+    fs.readFile('./images/mset.bmp', (err, data) => {
+      const bufferData = new bitmap.BitmapObj(data);   
+      const newPalette = filters.bluify(bufferData.paletteBuffer);
+      const newPaletteBuffer = Buffer.from(newPalette);
+      const outputBuffer = Buffer.concat([bufferData.headBuffer, newPaletteBuffer, bufferData.bodyBuffer]);
+      assert.equal(outputBuffer.length, data.length);
+      done();
+    });
+  });
+  
+  it('tests bitmap.writeBMP() succesfully writes test file', done => {
+    const testFile = '../tests/test.txt';
+    const testContent = 'This is content in test.txt';
+    bitmap.writeBMP(testFile, testContent, (err, data) => {
+      
+      fs.readFile('./tests/' + testFile, (err, results) => {
+        assert.equal(testContent, results);
+        done();
+      });
+    });
+  });
+  
+  
   
 });

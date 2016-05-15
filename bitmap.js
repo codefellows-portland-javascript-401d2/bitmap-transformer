@@ -3,9 +3,9 @@ const path = require('path');
 const filters = require('./filters');
 
 // Contructor = = = = = = = = = 
-function BitmapObj(data, headEnd) {
+function BitmapObj(data) {
   this.paletteStart = 54;
-  this.headEnd = headEnd;
+  this.headEnd = data.readInt16LE(10);
   this.headBuffer = Buffer.from(data.buffer, 0, this.paletteStart);
   this.paletteBuffer = Buffer.from(data.buffer, this.paletteStart, this.headEnd - this.paletteStart);
   this.bodyBuffer = Buffer.from(data.buffer, this.headEnd);
@@ -23,7 +23,7 @@ function readBMP(fileInput, filterType, callback) {
 //FILTER = = = = = = = = = = = = =
 function filterBMP(data, fileInput, filterType, callback) {
   
-  const bufferData = new BitmapObj(data, data.readInt16LE(10));
+  const bufferData = new BitmapObj(data);
   let newPalette;
   
   switch (filterType) {
@@ -71,6 +71,7 @@ function transformBMP(fileInput, filterType = 'brighten', callback) {
 }
 
 module.exports = {
+  BitmapObj,
   readBMP,
   filterBMP,
   writeBMP,
