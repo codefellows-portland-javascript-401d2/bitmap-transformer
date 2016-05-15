@@ -1,52 +1,76 @@
 const fs = require('fs');
+const path = require('path');
 const filters = require('./filters');
 
-/* ===========  T O   D O  ==================
-
-Split up readBMP function so filter function can be called outside of it
- ^ if possible ^  
- *see outcome in index.js*
-
-*/
-
 //INPUT = = = = = = = = = = = = =
-function readBMP(file, callback) {
-  fs.readFile('./images/' + file, (err, results) => {
+function readBMP(fileInput, filterType) {
+  fs.readFile(`./images/${fileInput}`, (err, data) => {
     if (err) throw err;
 
-    const paletteStart = 54;
-    const headEnd = results.readInt16LE(10);
-    const headBuffer = Buffer.from(results.buffer, 0, paletteStart);
-    const paletteBuffer = Buffer.from(results.buffer, paletteStart, headEnd - paletteStart);
-    const bodyBuffer = Buffer.from(results.buffer, headEnd);
-    const paletteDecimals = [];
-        
-    paletteBuffer.forEach(decimal => {
-      paletteDecimals.push(decimal);
-    });
-    
-    // const newPalette = filters.invertify(paletteDecimals);
-    // const newPalette = filters.brighten(paletteDecimals);
-    // const newPalette = filters.darken(paletteDecimals);
-    const newPalette = filters.funkify(paletteDecimals);
-    // const newPalette = filters.bluify(paletteDecimals);
-    // const newPalette = filters.hulkify(paletteDecimals);
-    
-    var newPaletteBuffer = Buffer.from(newPalette);
-    const totalLength = headBuffer.length + newPaletteBuffer.length + bodyBuffer.length;
-    var outputBuffer = Buffer.concat([headBuffer, newPaletteBuffer, bodyBuffer], totalLength);
-      
-    callback(outputBuffer);
+    filterBMP(data, fileInput, filterType);
   });
 }
-//OUTPUT = = = = = = = = = = = = = 
-function writeNewFile(someInput, file_number) {
-  fs.writeFile('./images/filtered-image-'+ file_number + '.bmp', someInput, (err) => {
+
+//FILTER = = = = = = = = = = = = =
+function filterBMP(data, fileInput, filterType) {
+  const paletteStart = 54;
+  const headEnd = data.readInt16LE(10);
+  const headBuffer = Buffer.from(data.buffer, 0, paletteStart);
+  const paletteBuffer = Buffer.from(data.buffer, paletteStart, headEnd - paletteStart);
+  const bodyBuffer = Buffer.from(data.buffer, headEnd);
+  const paletteDecimals = [];
+
+  paletteBuffer.forEach(decimal => {
+    paletteDecimals.push(decimal);
+  });
+
+  let newPalette;
+
+  switch (filterType) {
+  case 'bluify':
+    newPalette = filters.bluify(paletteDecimals);
+    break;
+  case 'brighten':
+    newPalette = filters.brighten(paletteDecimals);
+    break;
+  case 'darken':
+    newPalette = filters.darken(paletteDecimals);
+    break;
+  case 'funkify':
+    newPalette = filters.funkify(paletteDecimals);
+    break;
+  case 'hulkify':
+    newPalette = filters.hulkify(paletteDecimals);
+    break;
+  default:
+    newPalette = filters.invertify(paletteDecimals);
+    break;
+  }
+
+  const newPaletteBuffer = Buffer.from(newPalette);
+  const totalLength = headBuffer.length + newPaletteBuffer.length + bodyBuffer.length;
+  const outputBuffer = Buffer.concat([headBuffer, newPaletteBuffer, bodyBuffer], totalLength);
+  const fileBasename = path.basename(fileInput, '.bmp');
+  const fileOutput = `${fileBasename}-${filterType}.bmp`;
+
+  writeBMP(fileOutput, outputBuffer);
+}
+
+//OUTPUT = = = = = = = = = = = = =
+function writeBMP(fileOutput, fileData) {
+  fs.writeFile(`./images/${fileOutput}`, fileData, (err) => {
     if (err) throw err;
   });
 }
-//= = = = = = = = = = = = = = = = 
+
+//TRANSFORM = = = = = = = = = = = = =
+function transformBMP(fileInput, filterType = 'brighten') {
+  readBMP(fileInput, filterType);
+}
+
 module.exports = {
   readBMP,
-  writeNewFile
+  filterBMP,
+  writeBMP,
+  transformBMP
 };
