@@ -2,6 +2,15 @@ const fs = require('fs');
 const path = require('path');
 const filters = require('./filters');
 
+// Contructor = = = = = = = = = 
+function BitmapObj(data, headEnd) {
+  this.paletteStart = 54;
+  this.headEnd = headEnd;
+  this.headBuffer = Buffer.from(data.buffer, 0, this.paletteStart);
+  this.paletteBuffer = Buffer.from(data.buffer, this.paletteStart, this.headEnd - this.paletteStart);
+  this.bodyBuffer = Buffer.from(data.buffer, this.headEnd);
+}
+
 //INPUT = = = = = = = = = = = = =
 function readBMP(fileInput, filterType, callback) {
   fs.readFile(`./images/${fileInput}`, (err, data) => {
@@ -13,43 +22,34 @@ function readBMP(fileInput, filterType, callback) {
 
 //FILTER = = = = = = = = = = = = =
 function filterBMP(data, fileInput, filterType, callback) {
-  const paletteStart = 54;
-  const headEnd = data.readInt16LE(10);
-  const headBuffer = Buffer.from(data.buffer, 0, paletteStart);
-  const paletteBuffer = Buffer.from(data.buffer, paletteStart, headEnd - paletteStart);
-  const bodyBuffer = Buffer.from(data.buffer, headEnd);
-  const paletteDecimals = [];
-
-  paletteBuffer.forEach(decimal => {
-    paletteDecimals.push(decimal);
-  });
-
+  
+  const bufferData = new BitmapObj(data, data.readInt16LE(10));
   let newPalette;
-
+  
   switch (filterType) {
   case 'bluify':
-    newPalette = filters.bluify(paletteDecimals);
+    newPalette = filters.bluify(bufferData.paletteBuffer);
     break;
   case 'brighten':
-    newPalette = filters.brighten(paletteDecimals);
+    newPalette = filters.brighten(bufferData.paletteBuffer);
     break;
   case 'darken':
-    newPalette = filters.darken(paletteDecimals);
+    newPalette = filters.darken(bufferData.paletteBuffer);
     break;
   case 'funkify':
-    newPalette = filters.funkify(paletteDecimals);
+    newPalette = filters.funkify(bufferData.paletteBuffer);
     break;
   case 'hulkify':
-    newPalette = filters.hulkify(paletteDecimals);
+    newPalette = filters.hulkify(bufferData.paletteBuffer);
     break;
   default:
-    newPalette = filters.invertify(paletteDecimals);
+    newPalette = filters.invertify(bufferData.paletteBuffer);
     break;
   }
 
   const newPaletteBuffer = Buffer.from(newPalette);
-  const totalLength = headBuffer.length + newPaletteBuffer.length + bodyBuffer.length;
-  const outputBuffer = Buffer.concat([headBuffer, newPaletteBuffer, bodyBuffer], totalLength);
+  const totalLength = bufferData.headBuffer.length + newPaletteBuffer.length + bufferData.bodyBuffer.length;
+  const outputBuffer = Buffer.concat([bufferData.headBuffer, newPaletteBuffer, bufferData.bodyBuffer], totalLength);
   const fileBasename = path.basename(fileInput, '.bmp');
   const fileOutput = `${fileBasename}-${filterType}.bmp`;
 

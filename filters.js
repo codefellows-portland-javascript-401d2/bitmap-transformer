@@ -1,4 +1,4 @@
-// I just blue myself
+// Targets blue channels and adds by delta
 function bluify(inputDecimals) {
   const delta = 150;
   const colorizedDecimals = [];
