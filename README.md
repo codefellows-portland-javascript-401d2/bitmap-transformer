@@ -17,17 +17,17 @@ A Bitmap reader and transformer that will read a Bitmap in from disk, run one or
 
 Run Bitmap transformer  
 - Bluify file `node index.js palette-bitmap.bmp bluify`  
-  The output of the file will be `palette-bitmap-bluify.bmp`.
+  The output of the file will be "palette-bitmap-bluify.bmp"
 - Brighten file `node index.js palette-bitmap.bmp brighten`  
-  The output of the file will be `palette-bitmap-brighten.bmp`.
+  The output of the file will be "palette-bitmap-brighten.bmp"
 - Darken file `node index.js palette-bitmap.bmp darken`  
-  The output of the file will be `palette-bitmap-darken.bmp`.
+  The output of the file will be "palette-bitmap-darken.bmp"
 - Funkify file `node index.js palette-bitmap.bmp funkify`  
-  The output of the file will be `palette-bitmap-funkify.bmp`.
+  The output of the file will be "palette-bitmap-funkify.bmp"
 - Hulkify file `node index.js palette-bitmap.bmp hulkify`  
-  The output of the file will be `palette-bitmap-hulkify.bmp`.
+  The output of the file will be "palette-bitmap-hulkify.bmp"
 - Invertify file `node index.js palette-bitmap.bmp` or `node index.js palette-bitmap.bmp invertify`  
-  The output of the file will be `palette-bitmap-invertify.bmp`.
+  The output of the file will be "palette-bitmap-invertify.bmp"
 
 Run lint  
 `npm run lint`
