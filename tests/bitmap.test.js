@@ -27,6 +27,7 @@ describe('Bitmap Transformer', () => {
     var expected = 'mset-darken.bmp has been created in the images directory.';
     var message = es('node index.js mset.bmp darken').toString().trim();
     assert.equal(expected, message);
+    fs.unlinkSync('./images/mset-darken.bmp');
     done();
   });
   
@@ -48,6 +49,7 @@ describe('Bitmap Transformer', () => {
       
       fs.readFile('./tests/' + testFile, (err, results) => {
         assert.equal(testContent, results);
+        fs.unlinkSync('./tests/test.txt');
         done();
       });
     });
