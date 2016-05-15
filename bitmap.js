@@ -3,16 +3,16 @@ const path = require('path');
 const filters = require('./filters');
 
 //INPUT = = = = = = = = = = = = =
-function readBMP(fileInput, filterType) {
+function readBMP(fileInput, filterType, callback) {
   fs.readFile(`./images/${fileInput}`, (err, data) => {
-    if (err) throw err;
+    if (err) callback(err);
 
-    filterBMP(data, fileInput, filterType);
+    filterBMP(data, fileInput, filterType, callback);
   });
 }
 
 //FILTER = = = = = = = = = = = = =
-function filterBMP(data, fileInput, filterType) {
+function filterBMP(data, fileInput, filterType, callback) {
   const paletteStart = 54;
   const headEnd = data.readInt16LE(10);
   const headBuffer = Buffer.from(data.buffer, 0, paletteStart);
@@ -53,19 +53,21 @@ function filterBMP(data, fileInput, filterType) {
   const fileBasename = path.basename(fileInput, '.bmp');
   const fileOutput = `${fileBasename}-${filterType}.bmp`;
 
-  writeBMP(fileOutput, outputBuffer);
+  writeBMP(fileOutput, outputBuffer, callback);
 }
 
 //OUTPUT = = = = = = = = = = = = =
-function writeBMP(fileOutput, fileData) {
+function writeBMP(fileOutput, fileData, callback) {
   fs.writeFile(`./images/${fileOutput}`, fileData, (err) => {
-    if (err) throw err;
+    if (err) callback(err);
+
+    callback(err, `${fileOutput} has been created in the images directory.`);
   });
 }
 
 //TRANSFORM = = = = = = = = = = = = =
-function transformBMP(fileInput, filterType = 'brighten') {
-  readBMP(fileInput, filterType);
+function transformBMP(fileInput, filterType = 'brighten', callback) {
+  readBMP(fileInput, filterType, callback);
 }
 
 module.exports = {
