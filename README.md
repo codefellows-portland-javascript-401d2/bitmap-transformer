@@ -1,6 +1,5 @@
-![cf](http://i.imgur.com/7v5ASc8.png) Bitmap Transformer
-====
+###Bitmap - Transformer
 
-Lab assignment instructions are located [here](LAB.md)
+These modules read a palette .bmp file, perform a grayscale transform, and write the new file to disk.
 
-Replace contents of `README.md` with your proper developer focused project instructions.
+All testing performed in Mocha and automated in gulp
