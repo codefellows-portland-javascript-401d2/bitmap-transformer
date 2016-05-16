@@ -9,7 +9,7 @@ describe('bitmap-reader', () => {
 
 });
 
-describe.skip('transformer', () =>{
+describe('transformer', () =>{
   it('transforms rgb color properties to expected grayscale', () =>{
     var colorTest = {
       r: 0,
@@ -26,6 +26,5 @@ describe.skip('transformer', () =>{
     };
 
     assert.deepEqual(transform(colorTest), expectedColor);
-
   });
 });
